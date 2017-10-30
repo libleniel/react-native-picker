@@ -35,6 +35,7 @@ export default class PickerAny extends Component {
         showMask: PropTypes.bool,
         showDuration: PropTypes.number,
         pickerData: PropTypes.any.isRequired,
+        imagesData: PropTypes.any,
         selectedValue: PropTypes.any.isRequired,
         onPickerDone: PropTypes.func,
         onPickerCancel: PropTypes.func,
@@ -54,6 +55,7 @@ export default class PickerAny extends Component {
         onPickerCancel: ()=>{},
         onValueChange: ()=>{},
         allowFontScaling: true,
+        imagesData: [],
     };
 
     constructor(props, context){
@@ -76,7 +78,7 @@ export default class PickerAny extends Component {
     _getStateFromProps(props){
         //the pickedValue must looks like [wheelone's, wheeltwo's, ...]
         //this.state.selectedValue may be the result of the first pickerWheel
-        let {pickerData, selectedValue} = props;
+        let {pickerData, selectedValue, imagesData} = props;
         let pickerStyle = pickerData.constructor === Array ? 'parallel' : 'cascade';
         let firstWheelData;
         let firstPickedData;
@@ -110,6 +112,7 @@ export default class PickerAny extends Component {
         return {
             ...props,
             pickerData,
+            imagesData,
             selectedValue,
             //list of first wheel data
             firstWheelData,
@@ -226,6 +229,7 @@ export default class PickerAny extends Component {
                                 key={index}
                                 value={value}
                                 label={value.toString()}
+                                image={this.state.imagesData[index]?this.state.imagesData[index]:null}
                             />)
                         )}
                     </Picker>
