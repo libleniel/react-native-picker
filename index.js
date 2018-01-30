@@ -8,11 +8,11 @@ import {
     Animated,
     Platform,
     Dimensions,
-    PickerIOS,
     TouchableOpacity,
 } from 'react-native';
 
 import PickerAndroid from 'react-native-picker-android';
+import PickerIOS from '../../App/Components/Picker/PickerIOS'
 
 let Picker = Platform.OS === 'ios' ? PickerIOS : PickerAndroid;
 let PickerItem = Picker.Item;
