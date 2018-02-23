@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
@@ -10,7 +10,7 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native';
-
+import PropTypes from 'prop-types';
 import PickerAndroid from 'react-native-picker-android';
 import PickerIOS from '../../App/Components/Picker/PickerIOS'
 
