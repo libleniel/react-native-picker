@@ -63,7 +63,8 @@ export default class PickerAny extends Component {
     }
 
     componentWillMount(){
-        this.state = this._getStateFromProps(this.props);
+        let newState = this._getStateFromProps(this.props);
+        this.setState(newState);
     }
 
     componentWillReceiveProps(newProps){
