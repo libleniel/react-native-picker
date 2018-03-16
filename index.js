@@ -9,6 +9,7 @@ import {
     Platform,
     Dimensions,
     TouchableOpacity,
+    ViewPropTypes,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import PickerAndroid from 'react-native-picker-android';
@@ -24,7 +25,7 @@ const shortSide = width > height ? height : width;
 export default class PickerAny extends Component {
 
     static propTypes = {
-        style: View.propTypes.style,
+        style: ViewPropTypes.style,
         pickerElevation: PropTypes.number,
         pickerBtnText: PropTypes.string,
         pickerCancelBtnText: PropTypes.string,
