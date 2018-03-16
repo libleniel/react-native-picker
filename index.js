@@ -32,7 +32,7 @@ export default class PickerAny extends Component {
         pickerBtnStyle: Text.propTypes.style,
         pickerTitle: PropTypes.string,
         pickerTitleStyle: Text.propTypes.style,
-        pickerToolBarStyle: ViewPropTypes.propTypes.style,
+        pickerToolBarStyle: ViewPropTypes.style,
         showMask: PropTypes.bool,
         showDuration: PropTypes.number,
         pickerData: PropTypes.any.isRequired,
