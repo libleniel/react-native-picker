@@ -12,7 +12,7 @@
 #import <React/RCTFont.h>
 @implementation RbzPickermanager
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(RbzPicker)
 
 - (UIView *)view
 {
