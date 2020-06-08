@@ -6,15 +6,15 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
-#import "Picker.h"
+#import "RbzPicker.h"
 
 #import <React/RCTConvert.h>
 #import <React/RCTUtils.h>
 
-@interface Picker() <UIPickerViewDataSource, UIPickerViewDelegate>
+@interface RbzPicker() <UIPickerViewDataSource, UIPickerViewDelegate>
 @end
 
-@implementation Picker
+@implementation RbzPicker
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

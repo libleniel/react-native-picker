@@ -1,5 +1,5 @@
 //
-//  PickerManager.h
+//  RbzPickerManager.h
 //  RNPicker
 //
 //  Created by nendy.reebonz on 1/29/18.
@@ -8,6 +8,6 @@
 
 #import <React/RCTViewManager.h>
 
-@interface PickerManager : RCTViewManager
+@interface RbzPickermanager : RCTViewManager
 
 @end

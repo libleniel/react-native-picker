@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BDF59ECC24743D950094F6D3 /* Picker.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF59EC924743D950094F6D3 /* Picker.m */; };
-		BDF59ECD24743D950094F6D3 /* PickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF59ECB24743D950094F6D3 /* PickerManager.m */; };
+		BDF59ECC24743D950094F6D3 /* RbzPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF59EC924743D950094F6D3 /* RbzPicker.m */; };
+		BDF59ECD24743D950094F6D3 /* RbzPickermanager.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF59ECB24743D950094F6D3 /* RbzPickermanager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +25,10 @@
 
 /* Begin PBXFileReference section */
 		BD49DCD42474360D00030F22 /* libRNPicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNPicker.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		BDF59EC824743D950094F6D3 /* Picker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Picker.h; sourceTree = "<group>"; };
-		BDF59EC924743D950094F6D3 /* Picker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Picker.m; sourceTree = "<group>"; };
-		BDF59ECA24743D950094F6D3 /* PickerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerManager.h; sourceTree = "<group>"; };
-		BDF59ECB24743D950094F6D3 /* PickerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerManager.m; sourceTree = "<group>"; };
+		BDF59EC824743D950094F6D3 /* RbzPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbzPicker.h; sourceTree = "<group>"; };
+		BDF59EC924743D950094F6D3 /* RbzPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbzPicker.m; sourceTree = "<group>"; };
+		BDF59ECA24743D950094F6D3 /* RbzPickermanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbzPickermanager.h; sourceTree = "<group>"; };
+		BDF59ECB24743D950094F6D3 /* RbzPickermanager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbzPickermanager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,10 +45,10 @@
 		BD49DCCB2474360D00030F22 = {
 			isa = PBXGroup;
 			children = (
-				BDF59EC824743D950094F6D3 /* Picker.h */,
-				BDF59EC924743D950094F6D3 /* Picker.m */,
-				BDF59ECA24743D950094F6D3 /* PickerManager.h */,
-				BDF59ECB24743D950094F6D3 /* PickerManager.m */,
+				BDF59EC824743D950094F6D3 /* RbzPicker.h */,
+				BDF59EC924743D950094F6D3 /* RbzPicker.m */,
+				BDF59ECA24743D950094F6D3 /* RbzPickermanager.h */,
+				BDF59ECB24743D950094F6D3 /* RbzPickermanager.m */,
 				BD49DCD52474360D00030F22 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,8 +118,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDF59ECC24743D950094F6D3 /* Picker.m in Sources */,
-				BDF59ECD24743D950094F6D3 /* PickerManager.m in Sources */,
+				BDF59ECC24743D950094F6D3 /* RbzPicker.m in Sources */,
+				BDF59ECD24743D950094F6D3 /* RbzPickermanager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

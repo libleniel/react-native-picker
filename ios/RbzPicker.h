@@ -10,7 +10,7 @@
 
 #import <React/UIView+React.h>
 
-@interface Picker : UIPickerView
+@interface RbzPicker : UIPickerView
 
 @property (nonatomic, copy) NSArray<NSDictionary *> *items;
 @property (nonatomic, assign) NSInteger selectedIndex;

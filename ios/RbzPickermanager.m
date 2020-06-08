@@ -6,11 +6,11 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
-#import "PickerManager.h"
-#import "Picker.h"
+#import "RbzPickermanager.h"
+#import "RbzPicker.h"
 #import <React/RCTBridge.h>
 #import <React/RCTFont.h>
-@implementation PickerManager
+@implementation RbzPickermanager
 
 RCT_EXPORT_MODULE()
 
