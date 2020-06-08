@@ -1,5 +1,5 @@
 //
-//  Picker.m
+//  RbzPicker.m
 //  RNPicker
 //
 //  Created by nendy.reebonz on 1/29/18.
