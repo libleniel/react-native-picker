@@ -61,58 +61,58 @@ if 0.24 < react-native `npm install react-native-picker --save`
 
 ```javascript
 	import Picker from 'react-native-picker'
-	
-	constructor(props) {
-        super(props);
 
-        this.state = {
-            selectedValue: this.props.selectedValue,
-            previouslySelectedValue: this.props.selectedValue instanceof Array
-                ? [...this.props.selectedValue]
-                : this.props.selectedValue,
-            isNeedToResetPicker: false
-        }
-    }
+	constructor(props) {
+		super(props);
+
+		this.state = {
+		    selectedValue: this.props.selectedValue,
+		    previouslySelectedValue: this.props.selectedValue instanceof Array
+			? [...this.props.selectedValue]
+			: this.props.selectedValue,
+		    isNeedToResetPicker: false
+		}
+	}
 
 	render() {
-        return (
-            <Picker
-                ref={picker => this.picker = picker}
-                showDuration={300} //in miliseconds
-                selectedValue={this.state.selectedValue} //Default to be Selected Value
-                previouslySelectedValue={this.state.previouslySelectedValue} //Default to be Previously Selected Value
-                isNeedToResetPicker={this.state.isNeedToResetPicker} //Force Reset Other Picker (For Cascade Only)
-                pickerData={} //Picker`s Value List
-                imagesData={} //Picker's Image List
-                style={} //Picker's Style
-                onValueChange={(lastSelectedValue, isNeedToResetPicker) => {
-                    this.setState({
-                        selectedValue: lastSelectedValue,
-                        isNeedToResetPicker: isNeedToResetPicker
-                    })
-                }} //when sliding the picker
-                onPickerCancel={() => {
-                    this.setState({
-                        selectedValue: this.state.previouslySelectedValue instanceof Array 
-                            ? [...this.state.previouslySelectedValue] 
-                            : this.state.previouslySelectedValue
-                    }, () => {
-                        //Close the Picker
-                    })
-                }} //when cancel your chocie
-                onPickerDone={(picked) => {
-                    this.setState({
-                        previouslySelectedValue: [...picked]
-                    }, () => {
-                        //Close the Picker
-                    })
-                }} //when confirm your choice
-                isFinishResetPicker={() => {
-                    this.setState({isNeedToResetPicker: false})
-                }} //when finish re-render
-            />
-        )
-    }
+		return (
+		    <Picker
+			ref={picker => this.picker = picker}
+			showDuration={300} //in miliseconds
+			selectedValue={this.state.selectedValue} //Default to be Selected Value
+			previouslySelectedValue={this.state.previouslySelectedValue} //Default to be Previously Selected Value
+			isNeedToResetPicker={this.state.isNeedToResetPicker} //Force Reset Other Picker (For Cascade Only)
+			pickerData={} //Picker`s Value List
+			imagesData={} //Picker's Image List
+			style={} //Picker's Style
+			onValueChange={(lastSelectedValue, isNeedToResetPicker) => {
+			    this.setState({
+				selectedValue: lastSelectedValue,
+				isNeedToResetPicker: isNeedToResetPicker
+			    })
+			}} //when sliding the picker
+			onPickerCancel={() => {
+			    this.setState({
+				selectedValue: this.state.previouslySelectedValue instanceof Array 
+				    ? [...this.state.previouslySelectedValue] 
+				    : this.state.previouslySelectedValue
+			    }, () => {
+				//Close the Picker
+			    })
+			}} //when cancel your chocie
+			onPickerDone={(picked) => {
+			    this.setState({
+				previouslySelectedValue: [...picked]
+			    }, () => {
+				//Close the Picker
+			    })
+			}} //when confirm your choice
+			isFinishResetPicker={() => {
+			    this.setState({isNeedToResetPicker: false})
+			}} //when finish re-render
+		    />
+		)
+    	}
 ```
 
 ###Notice
