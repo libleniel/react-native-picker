@@ -59,75 +59,154 @@ export default class PickerAny extends Component {
         imagesData: [],
     };
 
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
+
+        let pickerStyle = PickerAny.getPickerStyle(props)
+
+        this.state = PickerAny._getStateFromProps(props, null, pickerStyle);
     }
 
-    componentWillMount(){
-        let newState = this._getStateFromProps(this.props);
-        this.setState(newState);
+    static getDerivedStateFromProps(props, state) {
+        let p_selectedValue = props.selectedValue;
+        let isNeedToResetPicker = props.isNeedToResetPicker;
+
+        let s_selectedValue = state.selectedValue;
+
+        let pickerStyle = PickerAny.getPickerStyle(props)
+
+        var isChanged = false
+
+        if (p_selectedValue && s_selectedValue) {
+            if (pickerStyle == 'parallel') {
+                if (p_selectedValue.constructor !== Array) {
+                    p_selectedValue = [p_selectedValue];
+                }
+
+                if (p_selectedValue.length == s_selectedValue.length) {
+                    for (let i = 0; i < p_selectedValue.length; i++) { 
+                      if (p_selectedValue[i] != s_selectedValue[i]) {
+                        isChanged = true
+
+                        break
+                      }
+                    }
+                } else {
+                    isChanged = true
+                }
+            } else {
+                if (
+                    state.thirdWheelData && 
+                    (
+                        p_selectedValue[0] != s_selectedValue[0] || 
+                        p_selectedValue[1] != s_selectedValue[1] || 
+                        p_selectedValue[2] != s_selectedValue[2]
+                    )
+                ) {
+                    isChanged = true
+                } else if (p_selectedValue[0] != s_selectedValue[0] || p_selectedValue[1] != s_selectedValue[1]) {
+                    isChanged = true
+                }
+            }
+        } else {           
+            isChanged = true
+        }
+
+        if (isChanged || isNeedToResetPicker) {
+            props.isFinishResetPicker && props.isFinishResetPicker()
+
+            return PickerAny._getStateFromProps(props, state, pickerStyle);
+        }        
+
+        return null
     }
 
-    componentWillReceiveProps(newProps){
-        let newState = this._getStateFromProps(newProps);
-        this.setState(newState);
+    static getPickerStyle (props) {
+        let {pickerData} = props;
+
+        return pickerData.constructor === Array ? 'parallel' : 'cascade';
+    }
+
+    static _getStateFromProps(props, state, pickerStyle) {
+        let {pickerData, selectedValue, imagesData} = props;
+
+        let firstWheelData;
+        let firstPickedData;
+
+        let secondWheelData;
+        let secondPickedDataIndex;
+
+        let thirdWheelData;
+        let thirdPickedDataIndex;
+
+        let cascadeData = {};
+
+        let slideAnim = (state && state.slideAnim ? state.slideAnim : new Animated.Value(-height));
+
+        if (pickerStyle === 'parallel') {
+            //compatible single wheel sence
+            if (selectedValue.constructor !== Array) {
+                selectedValue = [selectedValue];
+            }
+
+            if (pickerData[0].constructor !== Array) {
+                pickerData = [pickerData];
+            }
+        } else if (pickerStyle === 'cascade') {
+            //only support three stage
+            firstWheelData = Object.keys(pickerData);
+            firstPickedData = selectedValue[0];
+
+            let secondPickedData = selectedValue[1];
+
+            cascadeData = PickerAny._getCascadeData(pickerData, firstPickedData, secondPickedData, true);
+        }
+
+        return {
+            ...props,
+            //Picker Property
+            pickerStyle,
+            imagesData,
+            slideAnim,
+            //Picker Data
+            pickerData,
+            //Selected Value
+            selectedValue,
+            //First Wheel Data
+            firstWheelData,
+            firstPickedData,
+            //Second Wheel Data
+            secondWheelData: cascadeData.secondWheelData,
+            //Third Wheel Data
+            thirdWheelData: cascadeData.thirdWheelData,
+        };
+    }
+
+    static _getCascadeData(pickerData, firstPickedData, secondPickedData, onInit) {
+        let secondWheelData;
+        let thirdWheelData;
+        //only support two and three stage
+        for (let key in pickerData) { //two stage
+            if (pickerData[key].constructor === Array){
+                secondWheelData = pickerData[firstPickedData];
+
+                break;
+            } else{ //three stage
+                secondWheelData = Object.keys(pickerData[firstPickedData]);
+                thirdWheelData = pickerData[firstPickedData][secondPickedData];
+
+                break;
+            }
+        }
+
+        return {
+            secondWheelData,
+            thirdWheelData,
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState, context){
         return true;
-    }
-
-    _getStateFromProps(props){
-        //the pickedValue must looks like [wheelone's, wheeltwo's, ...]
-        //this.state.selectedValue may be the result of the first pickerWheel
-        let {pickerData, selectedValue, imagesData} = props;
-        let pickerStyle = pickerData.constructor === Array ? 'parallel' : 'cascade';
-        let firstWheelData;
-        let firstPickedData;
-        let secondPickedData;
-        let secondWheelData;
-        let secondPickedDataIndex;
-        let thirdWheelData;
-        let thirdPickedDataIndex;
-        let cascadeData = {};
-        let slideAnim = (this.state && this.state.slideAnim ? this.state.slideAnim : new Animated.Value(-height));
-
-        if(pickerStyle === 'parallel'){
-            //compatible single wheel sence
-            if(selectedValue.constructor !== Array){
-                selectedValue = [selectedValue];
-            }
-            if(pickerData[0].constructor !== Array){
-                pickerData = [pickerData];
-            }
-        }
-        else if(pickerStyle === 'cascade'){
-            //only support three stage
-            firstWheelData = Object.keys(pickerData);
-            firstPickedData = props.selectedValue[0];
-            secondPickedData = props.selectedValue[1];
-            cascadeData = this._getCascadeData(pickerData, selectedValue, firstPickedData, secondPickedData, true);
-        }
-        //save picked data
-        this.pickedValue = JSON.parse(JSON.stringify(selectedValue));
-        this.pickerStyle = pickerStyle;
-        return {
-            ...props,
-            pickerData,
-            imagesData,
-            selectedValue,
-            //list of first wheel data
-            firstWheelData,
-            //first wheel selected value
-            firstPickedData,
-            slideAnim,
-            //list of second wheel data and pickedDataIndex
-            secondWheelData: cascadeData.secondWheelData,
-            secondPickedDataIndex: cascadeData.secondPickedDataIndex,
-            //third wheel selected value and pickedDataIndex
-            thirdWheelData: cascadeData.thirdWheelData,
-            thirdPickedDataIndex: cascadeData.thirdPickedDataIndex
-        };
     }
 
     _slideUp(){
@@ -206,7 +285,8 @@ export default class PickerAny extends Component {
 
     _pickerFinish(){
         this._toggle();
-        this.state.onPickerDone(this.pickedValue);
+
+        this.state.onPickerDone(this.state.selectedValue, true);
     }
 
     _renderParallelWheel(pickerData){
@@ -215,17 +295,12 @@ export default class PickerAny extends Component {
                 <View style={styles.pickerWheel} key={index}>
                     <Picker
                         selectedValue={this.state.selectedValue[index]}
-                        onValueChange={value => {
-                            this.pickedValue.splice(index, 1, value);
-                            //do not set state to another object!! why?
-                            // this.setState({
-                            //  selectedValue: this.pickedValue
-                            // });
-                            this.setState({
-                                selectedValue: JSON.parse(JSON.stringify(this.pickedValue))
-                            });
-                            this.state.onValueChange(JSON.parse(JSON.stringify(this.pickedValue)), index);
-                        }} >
+                        onValueChange={(value, idx) => {
+                            var latestSelectedValue = this.state.selectedValue
+                            latestSelectedValue.splice(index, 1, value);
+
+                            this.state.onValueChange(latestSelectedValue);
+                        }}>
                         {item.map((value, index) => (
                             <PickerItem
                                 key={index}
@@ -240,82 +315,22 @@ export default class PickerAny extends Component {
         });
     }
 
-    _getCascadeData(pickerData, pickedValue, firstPickedData, secondPickedData, onInit){
-        let secondWheelData;
-        let secondPickedDataIndex;
-        let thirdWheelData;
-        let thirdPickedDataIndex;
-        //only support two and three stage
-        for(let key in pickerData){
-            //two stage
-            if(pickerData[key].constructor === Array){
-                secondWheelData = pickerData[firstPickedData];
-                if(onInit){
-                    secondWheelData.forEach(function(v, k){
-                        if(v === pickedValue[1]){
-                            secondPickedDataIndex = k;
-                        }
-                    }.bind(this));
-                }
-                else{
-                    secondPickedDataIndex = 0;
-                }
-                break;
-            }
-            //three stage
-            else{
-                secondWheelData = Object.keys(pickerData[firstPickedData]);
-                if(onInit){
-                    secondWheelData.forEach(function(v, k){
-                        if(v === pickedValue[1]){
-                            secondPickedDataIndex = k;
-                        }
-                    }.bind(this));
-                }
-                else{
-                    secondPickedDataIndex = 0;
-                }
-                thirdWheelData = pickerData[firstPickedData][secondPickedData];
-                if(onInit){
-                    thirdWheelData.forEach(function(v, k){
-                        if(v === pickedValue[2]){
-                            thirdPickedDataIndex = k;
-                        }
-                    })
-                }
-                else{
-                    thirdPickedDataIndex = 0;
-                }
-                break;
-            }
-        }
-
-        return {
-            secondWheelData,
-            secondPickedDataIndex,
-            thirdWheelData,
-            thirdPickedDataIndex
-        }
-    }
-
-    _renderCascadeWheel(pickerData){
+    _renderCascadeWheel(pickerData) {
         let thirdWheel = this.state.thirdWheelData && (
             <View style={styles.pickerWheel}>
                 <Picker
                     ref={'thirdWheel'}
-                    selectedValue={this.state.thirdPickedDataIndex}
-                    onValueChange={(index) => {
-                        this.pickedValue.splice(2, 1, this.state.thirdWheelData[index]);
-                        this.setState({
-                            thirdPickedDataIndex: index,
-                            selectedValue: 'wheel3'+index
-                        });
-                        this.state.onValueChange(JSON.parse(JSON.stringify(this.pickedValue)), 2);
+                    selectedValue={this.state.selectedValue[2]}
+                    onValueChange={(value, index) => {
+                        var latestSelectedValue = this.state.selectedValue
+                        latestSelectedValue.splice(2, 1, value);
+
+                        this.state.onValueChange(latestSelectedValue, false);
                     }} >
                     {this.state.thirdWheelData.map((value, index) => (
                         <PickerItem
                             key={index}
-                            value={index}
+                            value={value}
                             label={value.toString()}
                         />)
                     )}
@@ -328,31 +343,23 @@ export default class PickerAny extends Component {
                 <View style={styles.pickerWheel}>
                     <Picker
                         ref={'firstWheel'}
-                        selectedValue={this.state.firstPickedData}
-                        onValueChange={value => {
-                            let secondWheelData = Object.keys(pickerData[value]);
-                            let cascadeData = this._getCascadeData(pickerData, this.pickedValue, value, secondWheelData[0]);
-                            //when onPicked, this.pickedValue will pass to the parent
-                            //when firstWheel changed, second and third will also change
-                            if(cascadeData.thirdWheelData){
-                                this.pickedValue.splice(0, 3, value, cascadeData.secondWheelData[0], cascadeData.thirdWheelData[0]);
-                            }
-                            else{
-                                this.pickedValue.splice(0, 2, value, cascadeData.secondWheelData[0]);
+                        selectedValue={this.state.selectedValue[0]}
+                        onValueChange={(value, index) => {
+                            var latestSelectedValue = this.state.selectedValue
+
+                            let secondWheelData = pickerData[value];
+                            let secondPickedData = secondWheelData[0]
+                            
+                            let cascadeData = PickerAny._getCascadeData(pickerData, value, secondPickedData);
+
+                            if (!cascadeData.thirdWheelData) { //Two Stage
+                                latestSelectedValue.splice(0, 2, value, cascadeData.secondWheelData[0]);
+                            } else { // Three Stage
+                                latestSelectedValue.splice(0, 3, value, cascadeData.secondWheelData[0], cascadeData.thirdWheelData[0]);
                             }
 
-                            this.setState({
-                                selectedValue: 'wheel1'+value,
-                                firstPickedData: value,
-                                secondWheelData: cascadeData.secondWheelData,
-                                secondPickedDataIndex: 0,
-                                thirdWheelData: cascadeData.thirdWheelData,
-                                thirdPickedDataIndex: 0
-                            });
-                            this.state.onValueChange(JSON.parse(JSON.stringify(this.pickedValue)), 0);
-                            this.refs.secondWheel && this.refs.secondWheel.moveTo && this.refs.secondWheel.moveTo(0);
-                            this.refs.thirdWheel && this.refs.thirdWheel.moveTo && this.refs.thirdWheel.moveTo(0);
-                        }} >
+                            this.state.onValueChange(latestSelectedValue, true);
+                        }}>
                         {this.state.firstWheelData.map((value, index) => (
                             <PickerItem
                                 key={index}
@@ -365,29 +372,24 @@ export default class PickerAny extends Component {
                 <View style={styles.pickerWheel}>
                     <Picker
                         ref={'secondWheel'}
-                        selectedValue={this.state.secondPickedDataIndex}
-                        onValueChange={(index) => {
-                            let thirdWheelData = pickerData[this.state.firstPickedData][this.state.secondWheelData[index]];
-                            if(thirdWheelData){
-                                this.pickedValue.splice(1, 2, this.state.secondWheelData[index], thirdWheelData[0]);
-                            }
-                            else{
-                                this.pickedValue.splice(1, 1, this.state.secondWheelData[index]);
+                        selectedValue={this.state.selectedValue[1]}
+                        onValueChange={(value, index) => {
+                            let latestSelectedValue = this.state.selectedValue
+
+                            let cascadeData = PickerAny._getCascadeData(pickerData, this.state.firstPickedData, value);
+
+                            if (!cascadeData.thirdWheelData) { //Two Stage
+                                latestSelectedValue.splice(1, 1, value);
+                            } else { //Three Stage
+                                latestSelectedValue.splice(1, 2, value, cascadeData.thirdWheelData[0]);
                             }
 
-                            this.setState({
-                                secondPickedDataIndex: index,
-                                thirdWheelData,
-                                thirdPickedDataIndex: 0,
-                                selectedValue: 'wheel2'+index
-                            });
-                            this.state.onValueChange(JSON.parse(JSON.stringify(this.pickedValue)), 1);
-                            this.refs.thirdWheel && this.refs.thirdWheel.moveTo && this.refs.thirdWheel.moveTo(0);
-                        }} >
+                            this.state.onValueChange(latestSelectedValue, !cascadeData.thirdWheelData ? false : true);
+                        }}>
                         {this.state.secondWheelData.map((value, index) => (
                             <PickerItem
                                 key={index}
-                                value={index}
+                                value={value}
                                 label={value.toString()}
                             />)
                         )}
@@ -400,10 +402,10 @@ export default class PickerAny extends Component {
 
     _renderWheel(pickerData){
         let wheel = null;
-        if(this.pickerStyle === 'parallel'){
+        if(this.state.pickerStyle === 'parallel'){
             wheel = this._renderParallelWheel(pickerData);
         }
-        else if(this.pickerStyle === 'cascade'){
+        else if(this.state.pickerStyle === 'cascade'){
             wheel = this._renderCascadeWheel(pickerData);
         }
         return wheel;

@@ -33,11 +33,15 @@ if 0.24 < react-native `npm install react-native-picker --save`
 - <b>showMask</b> boolean, default to be false, cancel the picker by tapping in the rest of the screen support when setted to be true
 - <b>pickerTitle</b> string, title of picker
 - <b>pickerTitleStyle</b> textStylePropType, style of title
+- <b>allowFontScaling</b> boolean, allow scaling or not for title, cancel button, finish button and mask
 - <b>pickerData</b> array
-- <b>selectedValue</b> any
+- <b>selectedValue</b> array or string of the value
+- <b>previouslySelectedValue<b> array or string of the value, value that need to be selected when we choose to cancel selection/close the picker
 - <b>onPickerDone</b> function
 - <b>onPickerCancel</b> function
 - <b>onValueChange</b> function
+- <b>isFinishResetPicker<b> function, need to implement this if you use cascade version 
+- <b>isNeedToResetPicker</b> boolean, default to be false and for cascade only, you need send this value base on what you get from onValueChange
 
 ####Methods
 - <b>toggle</b> show or hide picker, default to be hiden
@@ -58,16 +62,57 @@ if 0.24 < react-native `npm install react-native-picker --save`
 ```javascript
 	import Picker from 'react-native-picker'
 	
-	<Picker
-		style={{
-			height: 300
-		}}
-		showDuration={300}
-		showMask={true}
-		pickerData={}//picker`s value List
-		selectedValue={}//default to be selected value
-		onPickerDone={}//when confirm your choice
-	/>
+	constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedValue: this.props.selectedValue,
+            previouslySelectedValue: this.props.selectedValue instanceof Array
+                ? [...this.props.selectedValue]
+                : this.props.selectedValue,
+            isNeedToResetPicker: false
+        }
+    }
+
+	render() {
+        return (
+            <Picker
+                ref={picker => this.picker = picker}
+                showDuration={300} //in miliseconds
+                selectedValue={this.state.selectedValue} //Default to be Selected Value
+                previouslySelectedValue={this.state.previouslySelectedValue} //Default to be Previously Selected Value
+                isNeedToResetPicker={this.state.isNeedToResetPicker} //Force Reset Other Picker (For Cascade Only)
+                pickerData={} //Picker`s Value List
+                imagesData={} //Picker's Image List
+                style={} //Picker's Style
+                onValueChange={(lastSelectedValue, isNeedToResetPicker) => {
+                    this.setState({
+                        selectedValue: lastSelectedValue,
+                        isNeedToResetPicker: isNeedToResetPicker
+                    })
+                }} //when sliding the picker
+                onPickerCancel={() => {
+                    this.setState({
+                        selectedValue: this.state.previouslySelectedValue instanceof Array 
+                            ? [...this.state.previouslySelectedValue] 
+                            : this.state.previouslySelectedValue
+                    }, () => {
+                        //Close the Picker
+                    })
+                }} //when cancel your chocie
+                onPickerDone={(picked) => {
+                    this.setState({
+                        previouslySelectedValue: [...picked]
+                    }, () => {
+                        //Close the Picker
+                    })
+                }} //when confirm your choice
+                isFinishResetPicker={() => {
+                    this.setState({isNeedToResetPicker: false})
+                }} //when finish re-render
+            />
+        )
+    }
 ```
 
 ###Notice
@@ -87,6 +132,11 @@ if 0.24 < react-native `npm install react-native-picker --save`
 	selectedValue = 3;
 ```
 
+```javascript
+	pickerData = [1,2,3,4];
+	selectedValue = [3];
+```
+
 - two or more wheel:
 
 ```javascript
@@ -95,7 +145,7 @@ if 0.24 < react-native `npm install react-native-picker --save`
 		[5,6,7,8],
 		...
 	];
-	selectedValue = [1, 5];
+	selectedValue = [3, 8];
 ```
 
 ####cascade:
@@ -104,13 +154,11 @@ if 0.24 < react-native `npm install react-native-picker --save`
 
 ```javascript
 	pickerData = {
-		{
-			a: [1,2,3,4],
-			b: [5,6,7,8],
-			...
-		}
+		a: [1,2,3,4],
+		b: [5,6,7,8],
+		...
 	};
-	selectedValue = ['a', 2];
+	selectedValue = ['b', 8];
 ```
 
 - three wheel
@@ -129,5 +177,5 @@ if 0.24 < react-native `npm install react-native-picker --save`
 		}
 		...
 	};
-	selectedValue = ['a', 'a1', 1];
+	selectedValue = ['a', 'a2', 7];
 ```
