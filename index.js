@@ -42,6 +42,7 @@ export default class PickerAny extends Component {
         onPickerCancel: PropTypes.func,
         onValueChange: PropTypes.func,
         allowFontScaling: PropTypes.bool,
+        zIndex: PropTypes.number
     };
 
     static defaultProps = {
@@ -57,6 +58,7 @@ export default class PickerAny extends Component {
         onValueChange: ()=>{},
         allowFontScaling: true,
         imagesData: [],
+        zIndex: null
     };
 
     constructor(props, context) {
@@ -424,7 +426,8 @@ export default class PickerAny extends Component {
                 elevation: this.state.pickerElevation,
                 width: longSide,
                 height: this.state.showMask ? height : this.state.style.height,
-                bottom: this.state.slideAnim
+                bottom: this.state.slideAnim,
+                zIndex: this.props.zIndex ? this.props.zIndex : null
             }]}>
                 {mask}
                 <View style={[styles.pickerBox, this.state.style]}>
