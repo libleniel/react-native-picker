@@ -10,9 +10,10 @@
 #import "RbzPicker.h"
 #import <React/RCTBridge.h>
 #import <React/RCTFont.h>
+
 @implementation RbzPickermanager
 
-RCT_EXPORT_MODULE(RbzPicker)
+RCT_EXPORT_MODULE(RbzNativePicker)
 
 - (UIView *)view
 {

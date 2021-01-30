@@ -9,13 +9,13 @@ import {
     Platform,
     Dimensions,
     TouchableOpacity,
-    ViewPropTypes,
+    ViewPropTypes
 } from 'react-native';
 import PropTypes from 'prop-types';
 import PickerAndroid from 'react-native-picker-android';
-import PickerIOS from '../../App/Components/Picker/PickerIOS'
+import PickeriOS from '../../App/Components/Picker/RbzPickerIOS'
 
-let Picker = Platform.OS === 'ios' ? PickerIOS : PickerAndroid;
+let Picker = Platform.OS === 'ios' ? PickeriOS : PickerAndroid;
 let PickerItem = Picker.Item;
 let {width, height} = Dimensions.get('window');
 
