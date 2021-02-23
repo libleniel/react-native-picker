@@ -218,6 +218,7 @@ export default class PickerAny extends Component {
             {
                 toValue: 0,
                 duration: this.state.showDuration,
+                useNativeDriver: false
             }
         ).start((evt) => {
             if(evt.finished) {
@@ -234,6 +235,7 @@ export default class PickerAny extends Component {
             {
                 toValue: -height,
                 duration: this.state.showDuration,
+                useNativeDriver: false
             }
         ).start((evt) => {
             if(evt.finished) {
